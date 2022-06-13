@@ -10,14 +10,6 @@ public:
 
 	}
 
-	String112(const String112& obj) {
-		if (obj.str != nullptr) {
-			this->len = obj.len;
-			this->str = new char[obj.len + 1];
-			strcpy_s(this->str, this->len + 1, obj.str);
-		}
-	}
-
 	String112(const char* str) {
 		this->len = strlen(str);
 		this->str = new char[this->len + 1];
@@ -79,6 +71,14 @@ public:
 		}
 	}
 
+	String112(const String112& obj) {
+		if (obj.str != nullptr) {
+			this->len = obj.len;
+			this->str = new char[obj.len + 1];
+			strcpy_s(this->str, this->len + 1, obj.str);
+		}
+	}
+
 	String112& operator=(const String112& obj) {
 		if (this == &obj)
 			return *this;
@@ -88,6 +88,20 @@ public:
 			this->str = new char[obj.len + 1];
 			strcpy_s(this->str, this->len + 1, obj.str);
 		}
+		return *this;
+	}
+
+	String112(String112&& obj) {
+		swap(this->str, obj.str);
+		swap(this->len, obj.len);
+	}
+
+	String112& operator=(String112&& obj) {
+		if (this == &obj)
+			return *this;
+		swap(this->str, obj.str);
+		swap(this->len, obj.len);
+		obj.Clear();
 		return *this;
 	}
 
@@ -171,7 +185,17 @@ bool operator!=(const String112& a, const String112& b) {
 }
 
 bool operator>(const String112& a, const String112& b) {
-	return a.len > b.len;
+	if (a.len != b.len)
+		return a.len > b.len;
+	int sumA = 0;
+	int sumB = 0;
+	for (int i = 0; i < a.len; i++) {
+		sumA += int(a.str[i]);
+	}
+	for (int i = 0; i < a.len; i++) {
+		sumB += int(b.str[i]);
+	}
+	return sumA > sumB;
 }
 
 bool operator>=(const String112& a, const String112& b) {
@@ -179,7 +203,17 @@ bool operator>=(const String112& a, const String112& b) {
 }
 
 bool operator<(const String112& a, const String112& b) {
-	return a.len < b.len;
+	if (a.len != b.len)
+		return a.len < b.len;
+	int sumA = 0;
+	int sumB = 0;
+	for (int i = 0; i < a.len; i++) {
+		sumA += int(a.str[i]);
+	}
+	for (int i = 0; i < a.len; i++) {
+		sumB += int(b.str[i]);
+	}
+	return sumA < sumB;
 }
 
 bool operator<=(const String112& a, const String112& b) {
@@ -208,7 +242,7 @@ istream& operator>>(istream& is, String112& s) {
 
 void main() {
 	String112 s;
-	String112 s1 = "Hello";
-	String112 s3 = "fffff";
-	s1 != s3 ? cout << "Yes" : cout << "No";
+	String112 s1 = "H";
+	String112 s3 = "h";
+	s1 > s3 ? cout << "Yes" : cout << "No";
 }
